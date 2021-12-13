@@ -7,4 +7,4 @@
         state: latest
         security: yes # yes means only security patches, no means all
       async: 1000 # will run the job for 1000 seconds before timeout
-      pull: 15   # will check every 15 seconds   
+      poll: 15   # will check every 15 seconds   
