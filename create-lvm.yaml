@@ -1,0 +1,35 @@
+- hosts: host
+  tasks:
+    - name: partition new disk
+      shell: echo -e "n\np\n1\n\n\nw" | sudo fdisk /dev/sdb
+      args:
+         executable: /bin/bash
+    - name: pvcreate
+      shell: pvcreate /dev/sdb1
+      args:
+        executable: /bin/bash
+    - name: vgcreate
+      shell: vgcreate vg_u01 /dev/sdb1
+      args:
+        executable: /bin/bash
+    - name: lvcreate
+      shell: lvcreate -l 100%free -n lv_u01 vg_u01
+      args:
+        executable: /bin/bash
+    - name: mkfs
+      shell: mkfs.xfs /dev/mapper/vg_u01-lv_u01
+      args:
+        executable: /bin/bash
+    - name: mkdir u01
+      shell: mkdir /u01
+      args:
+        executable: /bin/bash
+    - name: fstab
+      shell: echo "/dev/mapper/vg_u01-lv_u01    /u01    xfs    defaults 0 0" >> /etc/fstab
+      args:
+        executable: /bin/bash
+
+    - name: mount -a
+      shell: mount -a
+      args:
+        executable: /bin/bash
